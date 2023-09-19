@@ -1,44 +1,34 @@
 <template>
   <div>
     <h1>Listings List</h1>
-    <ul>
-      <li v-for="listing in listings" :key="listing.id">
-        <div>
-          <strong>Listing ID:</strong> {{ listing.id }}
-        </div>
-        <div>
-          <strong>User ID:</strong> {{ listing.userId }}
-        </div>
-        <div>
-          <strong>Origin:</strong> {{ listing.origin.city }} <!-- Assuming 'origin' has a 'city' property -->
-        </div>
-        <div>
-          <strong>Destination:</strong> {{ listing.destination.city }} <!-- Assuming 'destination' has a 'city' property -->
-        </div>
-        <div>
-          <strong>Description:</strong> {{ listing.description }}
-        </div>
-        <div>
-          <strong>Departure Date:</strong> {{ listing.departureDate }}
-        </div>
-        <div>
-          <strong>Arrival Date:</strong> {{ listing.arrivalDate }}
-        </div>
-        <div>
-          <strong>Show All:</strong> {{ listing.showAll ? 'Yes' : 'No' }}
-        </div>
-        <div>
-          <strong>Status:</strong> {{ listing.status }}
-        </div>
-        <div>
-          <strong>Type:</strong> {{ listing.type }}
-        </div>
-        <div>
-          <strong>Fee:</strong> {{ listing.fee }}
-        </div>
-        <!-- Add more fields as needed -->
-      </li>
-    </ul>
+    <div>
+      <button @click="getTravellerListings">TRAVELLER_LISTING</button>
+      <button @click="getSenderListings">SENDER_LISTING</button>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Listing Id</th>
+          <th>Departure Date</th>
+          <th>Description</th>
+          <th>CityName</th>
+          <th>Type</th>
+          <th>Fee</th>
+          <!-- Add more table headers as needed -->
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="listing in listings" :key="listing.id">
+          <td>{{ listing.id }}</td>
+          <td>{{ listing.departureDate }}</td>
+          <td>{{ listing.description }}</td>
+          <td>{{ listing.destination.cityName }}</td>
+          <td>{{ listing.type }}</td>
+          <td>{{ listing.fee }} AZN</td>
+          <!-- Add more table data columns as needed -->
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
@@ -50,15 +40,32 @@ export default {
     };
   },
   async created() {
-    try {
-      const response = await fetch('http://localhost:7799/api/listings', {
-        headers: {
-          'accept': '*/*'
-        }
-      });
-      this.listings = await response.json();
-    } catch (error) {
-      console.error("There was an error fetching the listings:", error);
+    // Fetch initial listings without a type parameter
+    this.fetchListings();
+  },
+  methods: {
+    async fetchListings(type = "") {
+      try {
+        // Create the URL based on the listing type
+        const url = type
+          ? `http://localhost:7799/api/listings?offset=0&pageSize=200&desc=false&sortBy=&type=${type}`
+          : "http://localhost:7799/api/listings";
+
+        const response = await fetch(url, {
+          headers: {
+            'accept': '*/*'
+          }
+        });
+        this.listings = await response.json();
+      } catch (error) {
+        console.error("There was an error fetching the listings:", error);
+      }
+    },
+    getTravellerListings() {
+      this.fetchListings("TRAVELLER_LISTING");
+    },
+    getSenderListings() {
+      this.fetchListings("SENDER_LISTING");
     }
   }
 };
@@ -66,4 +73,18 @@ export default {
 
 <style scoped>
 /* Add any styles specific to this component here */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+}
 </style>

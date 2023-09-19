@@ -1,34 +1,33 @@
 <template>
   <div>
     <h1>User List</h1>
-    <ul>
-      <li v-for="user in users" :key="user.id">
-       <div>
-           <strong>User ID:</strong> {{ user.id }}
-        </div>
-        <div>
-          <strong>Name:</strong> {{ user.name }}
-        </div>
-        <div>
-          <strong>Email:</strong> {{ user.email }}
-        </div>
-        <div>
-          <strong>Phone:</strong> {{ user.phone }}
-        </div>
-        <div>
-          <strong>Username:</strong> {{ user.username }}
-        </div>
-        <div>
-          <strong>Email Verified:</strong> {{ user.emailVerified ? 'Yes' : 'No' }}
-        </div>
-        <div>
-          <strong>Phone Verified:</strong> {{ user.phoneVerified ? 'Yes' : 'No' }}
-        </div>
-        <!-- Add more details as needed -->
-      </li>
-    </ul>
+    <table>
+      <thead>
+        <tr>
+          <th>User ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Username</th>
+          <th>Email Verified</th>
+          <th>Phone Verified</th>
+          <!-- Add more table headers as needed -->
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(user, index) in users" :key="user.id">
+          <td>{{ index + 1 }}</td>
+          <td>{{ user.name }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.phone }}</td>
+          <td>{{ user.username }}</td>
+          <td>{{ user.emailVerified ? 'Yes' : 'No' }}</td>
+          <td>{{ user.phoneVerified ? 'Yes' : 'No' }}</td>
+          <!-- Add more table data columns as needed -->
+        </tr>
+      </tbody>
+    </table>
   </div>
-
 </template>
 
 <script>
@@ -55,4 +54,18 @@ export default {
 
 <style scoped>
 /* Add any styles specific to this component here */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+}
 </style>
